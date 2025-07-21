@@ -2,9 +2,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/main.style.css">
 </head>
 <body>
     <h2>Hello <%= user_data.name %></h2>
+
+    <form method="post" id="HLL_test">
+        
+        <button type="submit" id="link:1">link</button>
+        <div id="link:1_visits"><%= visits %></div>
+    </form>
+
+    <script>    
+        
+        document.getElementById('HLL_test').addEventListener('submit',async (e)=>{
+            e.preventDefault()
+            const link_id = e.submitter.id
+            
+            const request = await fetch('/linkHLL',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    link_id,
+                })
+            })
+
+            const request2 = await request.json()
+            document.getElementById('link:1_visits').textContent = request2.visits
+        })
+    
+    
+    </script>
 </body>
 </html>

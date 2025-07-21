@@ -40,6 +40,10 @@ export class MainPageService {
 
     async cache_method(id){
         const cache_availability = await this.redis.hExists(`user:${id}`,'id')
+        
+
+
+
         if(cache_availability){
             const user_info = await this.redis.hGetAll(`user:${id}`)
             return user_info
@@ -55,9 +59,20 @@ export class MainPageService {
                     'name', user_info_DB?.name,
                     'password', user_info_DB.password
                 ])
-                await this.redis.expire(`user:${id}`, 30);
+                await this.redis.expire(`user:${id}`, 600);
             }
+
             return user_info_DB
         }
+    }
+
+
+    async link_HLL(link_id,user_id){
+        await this.redis.pfAdd(link_id,user_id)
+    }
+
+    async link_HLL_visits(){
+        const visits = await this.redis.pfCount('link:1')
+        return visits
     }
 }
